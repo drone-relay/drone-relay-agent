@@ -14,7 +14,14 @@ import (
 )
 
 func main() {
-	cfg := config.Default()
+	cfg := config.Load()
+
+    if cfg.OutputFormat != "json" {
+        log.Fatalf(
+            "unsupported output format: %s",
+            cfg.OutputFormat,
+        )
+    }
 
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
@@ -29,6 +36,12 @@ func main() {
 	}
 
 	jsonWriter := output.NewJSONWriter(os.Stdout)
+
+    log.Printf(
+        "starting pulse-agent interval=%s output=%s",
+        cfg.CollectionInterval,
+        cfg.OutputFormat,
+    )
 
 	ticker := time.NewTicker(cfg.CollectionInterval)
 	defer ticker.Stop()
