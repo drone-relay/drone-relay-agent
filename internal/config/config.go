@@ -8,6 +8,7 @@ import (
 type Config struct {
 	CollectionInterval time.Duration
 	OutputFormat       string
+	BatchSize          int
 }
 
 func Load() Config {
@@ -23,10 +24,17 @@ func Load() Config {
     		"output format (json)",
     	)
 
+        batchSize := flag.Int(
+            "batch-size",
+            5,
+            "number of metrics per batch",
+        )
+
     	flag.Parse()
 
     	return Config{
     		CollectionInterval: *interval,
     		OutputFormat:       *output,
+    		BatchSize:          *batchSize,
     	}
 }
